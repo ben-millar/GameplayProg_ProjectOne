@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include "Clouds.h"
 
 class Game
 {
@@ -42,5 +43,7 @@ private:
 	sf::RenderWindow m_window;
 
 	bool m_exitGame;
+
+	Clouds* m_clouds;
 };
 #endif
