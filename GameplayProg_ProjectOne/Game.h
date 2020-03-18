@@ -46,7 +46,6 @@ private:
 	bool m_exitGame;
 
 	Clouds* m_clouds;
-
 	Lightning m_lightning;
 };
 #endif

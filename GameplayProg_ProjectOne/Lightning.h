@@ -4,9 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-// TODO: Add a 'bolt' struct, to give each bolt a lifetime.
-// We should manage a queue of bolts with the oldest at the end
-
 class Lightning : public sf::Drawable
 {
 public:
@@ -32,7 +29,13 @@ public:
 
 private:
 
-	sf::VertexArray m_bolt{ sf::Lines };
+	struct Bolt
+	{
+		sf::VertexArray segments{ sf::Lines };
+		sf::Clock timeAlive;
+	};
+
+	std::vector<Bolt> m_bolts;
 };
 
 #endif // !LIGHTNING_H

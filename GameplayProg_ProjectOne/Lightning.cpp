@@ -8,6 +8,9 @@ Lightning::Lightning()
 
 void Lightning::strike(sf::Vector2i t_target)
 {
+	// Create a new bolt
+	Bolt bolt;
+
 	// Directly above the target point with an x-offset of +/- 50px
 	sf::Vector2f OriginPos = { static_cast<float>(t_target.x + rand() % 100 - 50), 0.0f };
 
@@ -33,27 +36,47 @@ void Lightning::strike(sf::Vector2i t_target)
 		// Random x offset +/- 20px, y-value is our break point percentage along the total length
 		sf::Vector2f end = { (start.x + rand() % 60) - 30, t_target.y * breakPoint.at(i)};
 
-		m_bolt.append(sf::Vertex(start, sf::Color::Yellow));
-		m_bolt.append(sf::Vertex(end, sf::Color::Yellow));
+		bolt.segments.append(sf::Vertex(start, sf::Color::Yellow));
+		bolt.segments.append(sf::Vertex(end, sf::Color::Yellow));
 
 		start = end;
 	}
 
 
 	// Connect the end of the bolt to the strike target
-	m_bolt.append(sf::Vertex(start, sf::Color::Yellow));
-	m_bolt.append(sf::Vertex(static_cast<sf::Vector2f>(t_target), sf::Color::Yellow));
+	bolt.segments.append(sf::Vertex(start, sf::Color::Yellow));
+	bolt.segments.append(sf::Vertex(static_cast<sf::Vector2f>(t_target), sf::Color::Yellow));
+
+	// Restart clock
+	bolt.timeAlive.restart();
+
+	// Add it to our vector
+	m_bolts.push_back(bolt);
 }
 
 ///////////////////////////////////////////////////////////////
 
 void Lightning::update(sf::Time t_dT)
 {
+	if (!m_bolts.empty())
+	{
+		for (std::vector<Bolt>::iterator i = m_bolts.begin(); i < m_bolts.end(); i++)
+		{
+			if (m_bolts[i - m_bolts.begin()].timeAlive.getElapsedTime() > sf::seconds(1.f))
+			{
+				m_bolts.erase(i);
+				break;
+			}
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////
 
 void Lightning::draw(sf::RenderTarget& t_target, sf::RenderStates t_state) const
 {
-	t_target.draw(m_bolt);
+	for (auto& b : m_bolts)
+	{
+		t_target.draw(b.segments);
+	}
 }
