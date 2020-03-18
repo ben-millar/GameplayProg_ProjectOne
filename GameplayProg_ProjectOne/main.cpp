@@ -1,3 +1,6 @@
+// Author: Ben Millar C00236772
+// Date: 18/03/2020
+
 #include "Game.h"
 
 int main()

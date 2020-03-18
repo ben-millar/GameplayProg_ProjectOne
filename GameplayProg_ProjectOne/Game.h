@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Clouds.h"
+#include "Lightning.h"
 
 class Game
 {
@@ -45,5 +46,7 @@ private:
 	bool m_exitGame;
 
 	Clouds* m_clouds;
+
+	Lightning m_lightning;
 };
 #endif

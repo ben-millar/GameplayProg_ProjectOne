@@ -55,6 +55,11 @@ void Game::processEvents()
 				m_exitGame = true;
 			}
 		}
+
+		if (sf::Event::MouseButtonPressed == event.type)
+		{
+			m_lightning.strike({ event.mouseButton.x, event.mouseButton.y });
+		}
 	}
 }
 
@@ -67,6 +72,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
+	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 }
 
@@ -74,8 +80,9 @@ void Game::update(sf::Time t_deltaTime)
 
 void Game::render()
 {
-	m_window.clear(sf::Color::White);
+	m_window.clear(sf::Color(32,32,32,255));
 
+	m_window.draw(m_lightning);
 	m_window.draw(*m_clouds);
 
 	m_window.display();

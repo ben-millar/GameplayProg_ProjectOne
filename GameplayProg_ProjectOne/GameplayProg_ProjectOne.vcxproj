@@ -135,11 +135,13 @@
   <ItemGroup>
     <ClCompile Include="Clouds.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Lightning.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clouds.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Lightning.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
