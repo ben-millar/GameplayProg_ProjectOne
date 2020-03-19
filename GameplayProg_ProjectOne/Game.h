@@ -25,6 +25,11 @@ private:
 	// *** Methods ***
 
 	/// <summary>
+	/// @brief Loads our background image in from a file
+	/// </summary>
+	void setupBackground();
+
+	/// <summary>
 	/// @brief Handles all incoming system/SFML events
 	/// </summary>
 	void processEvents();
@@ -44,6 +49,9 @@ private:
 	sf::RenderWindow m_window;
 
 	bool m_exitGame;
+
+	sf::Texture m_backgroundTexture;
+	sf::Sprite m_backgroundSprite;
 
 	Clouds* m_clouds;
 	Lightning m_lightning;

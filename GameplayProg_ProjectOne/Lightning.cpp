@@ -33,7 +33,7 @@ void Lightning::strike(sf::Vector2i t_target)
 
 	for (int i = 0; i < breakPoint.size() - 1; i++)
 	{
-		// Random x offset +/- 20px, y-value is our break point percentage along the total length
+		// Random x offset +/- 30px, y-value is our break point percentage along the total length
 		sf::Vector2f end = { (start.x + rand() % 60) - 30, t_target.y * breakPoint.at(i)};
 
 		bolt.segments.append(sf::Vertex(start, sf::Color::Yellow));

@@ -1,6 +1,7 @@
 #ifndef CLOUDS_H
 #define CLOUDS_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <array>
 
@@ -23,6 +24,11 @@ public:
 	void draw(sf::RenderTarget& t_target, sf::RenderStates t_state = sf::RenderStates::Default) const override;
 
 private:
+
+	/// <summary>
+	/// @brief Loads our cloud texture in from file
+	/// </summary>
+	void loadTextures();
 
 	/// <summary>
 	/// @brief Initialise the shapes in our CloudPiece array
@@ -49,6 +55,8 @@ private:
 	static const int NUM_CLOUDS{ 100 };
 
 	std::array<CloudPiece, NUM_CLOUDS> m_cloudArray;
+
+	sf::Texture m_texture;
 };
 
 #endif // !CLOUDS_H

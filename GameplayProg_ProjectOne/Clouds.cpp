@@ -2,12 +2,29 @@
 
 
 Clouds::Clouds(int t_width, int t_height) :
-	MIN_RAD{25},
-	MAX_RAD{75},
+	MIN_RAD{75},
+	MAX_RAD{150},
 	m_width{t_width},
 	m_height{t_height}
 {
+	loadTextures();
 	initArray();
+}
+
+///////////////////////////////////////////////////////////////
+
+void Clouds::loadTextures()
+try
+{
+	if (!m_texture.loadFromFile("ASSETS\\TEXTURES\\cloud.png"))
+	{
+		std::string msg{ "Error loading cloud texture" };
+		throw std::exception(msg.c_str());
+	}
+}
+catch (const std::exception& e)
+{
+	std::cout << e.what() << std::endl;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -20,14 +37,20 @@ void Clouds::initArray()
 		float radius = static_cast<float>((rand() % (MAX_RAD - MIN_RAD)) + MIN_RAD);
 		c.rad = radius;
 
-		// Random position within bounds, with an overdraw of 50 pixels added on either side to prevent gaps at edge
-		c.shape.setPosition({ static_cast<float>(rand() % (m_width + 100) - 50), static_cast<float>(rand() % m_height) - 50});
+		// Random position within bounds, with an overdraw of 100 pixels added on either side to prevent gaps at edge
+		c.shape.setPosition({ static_cast<float>(rand() % (m_width + 200) - 150), static_cast<float>(rand() % m_height) - 100});
 
 		// Random shade of grey
-		int colorOffset = rand() % 64;
-		c.shape.setFillColor(sf::Color( 64 + colorOffset, 64 + colorOffset, 64 + colorOffset, 255 ));
+		int colorOffset = rand() % 128;
+		c.shape.setFillColor(sf::Color(64 + colorOffset, 64 + colorOffset, 64 + colorOffset, 64 + colorOffset ));
 
+		// Add a slight rotational bias to offset uniformity
+		c.shape.setRotation(rand() % 10 - 5);
+
+		// Flip a coin to decide if they're growing or shrinking
 		c.growing = rand() % 2;
+
+		c.shape.setTexture(&m_texture);
 	}
 }
 
@@ -47,8 +70,8 @@ void Clouds::update(sf::Time t_dT)
 			c.growing = true;
 		}
 
-		// random between 0.00 and 0.25
-		float deltaRad{ (rand() % 20) / 100.0f };
+		// random between 0.00 and 0.15
+		float deltaRad{ (rand() % 15) / 100.0f };
 		c.rad += (c.growing) ? deltaRad : -deltaRad;
 
 		// Update our radius

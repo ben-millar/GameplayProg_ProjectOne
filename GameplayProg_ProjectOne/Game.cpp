@@ -4,7 +4,9 @@ Game::Game() :
 	m_window{ sf::VideoMode{ 800, 600, 32 }, "Taranis", sf::Style::Close },
 	m_exitGame{ false }
 {
-	m_clouds = new Clouds(m_window.getSize().x, 100);
+	setupBackground();
+
+	m_clouds = new Clouds(m_window.getSize().x, 80);
 }
 
 ///////////////////////////////////////////////////////////////
@@ -35,6 +37,26 @@ void Game::run()
 		}
 		render();
 	}
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::setupBackground()
+try
+{
+	if (!m_backgroundTexture.loadFromFile("ASSETS\\TEXTURES\\background.png"))
+	{
+		std::string msg{ "Error loading background texture" };
+		throw std::exception(msg.c_str());
+	}
+	else
+	{
+		m_backgroundSprite.setTexture(m_backgroundTexture);
+	}
+}
+catch (const std::exception& e)
+{
+	std::cout << e.what() << std::endl;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -80,8 +102,9 @@ void Game::update(sf::Time t_deltaTime)
 
 void Game::render()
 {
-	m_window.clear(sf::Color(32,32,32,255));
+	m_window.clear(sf::Color::White);
 
+	m_window.draw(m_backgroundSprite);
 	m_window.draw(m_lightning);
 	m_window.draw(*m_clouds);
 
