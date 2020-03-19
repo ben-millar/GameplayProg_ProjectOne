@@ -102,6 +102,11 @@ void Game::update(sf::Time t_deltaTime)
 
 void Game::render()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Save OpenGL render state while we run an SFML draw
+	m_window.pushGLStates();
+
 	m_window.clear(sf::Color::White);
 
 	m_window.draw(m_backgroundSprite);
@@ -109,4 +114,7 @@ void Game::render()
 	m_window.draw(*m_clouds);
 
 	m_window.display();
+
+	// Restore our OpenGL render state
+	m_window.popGLStates();
 }

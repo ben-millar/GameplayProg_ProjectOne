@@ -1,6 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <GL/glew.h>
+#include <GL/wglew.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <SFML/Window.hpp>
+#include <SFML/OpenGL.hpp>
+
 #include <SFML/Graphics.hpp>
 #include "Clouds.h"
 #include "Lightning.h"
