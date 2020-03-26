@@ -146,13 +146,23 @@ void Game::initialise()
 	);
 
 	// Model matrix
-	for (int i = 0; i < NUM_CUBES; i++) { model[i] = glm::mat4(1.0f); } // Identity matrix
+	for (int i = 0; i < NUM_CUBES; i++) 
+	{ 
+		model[i] = glm::mat4(1.0f); // Identity matrix
+
+		model[i] = glm::translate(model[i], glm::vec3{ 0.0f, GROUND_POS, 0.0f }); // Move to ground level
+	} 
 
 	model[0] = glm::translate(model[0], glm::vec3{ -5.0f, 0.0f, 0.0f });
 	model[2] = glm::translate(model[2], glm::vec3{ 5.0f, 0.0f, 0.0f });
+	
+	for (int i = 0; i < NUM_CUBES; i++)
+	{
+		modelPos[i] = model[i]; // Preserve true position
+	}
 
 	// Set cube initial position
-	y_offset = GROUND_POS;
+//	y_offset = GROUND_POS;
 	x_offset = SCREEN_START;
 
 	// Enable Depth Test
@@ -278,39 +288,6 @@ void Game::processEvents()
 			{
 				m_exitGame = true;
 			}
-
-			if (sf::Keyboard::Space == event.key.code)
-			{
-				if (!m_jumping)
-				{
-					m_jumping = true;
-					m_velocity.y = m_jumpSpeed;
-				}
-			}
-
-			if (sf::Keyboard::Q == event.key.code)
-			{
-				m_gravity -= 0.005f;
-				std::cout << "Gravity: " << m_gravity << std::endl;
-			}
-
-			if (sf::Keyboard::A == event.key.code)
-			{
-				m_gravity += 0.005f;
-				std::cout << "Gravity: " << m_gravity << std::endl;
-			}
-
-			if (sf::Keyboard::W == event.key.code)
-			{
-				m_jumpSpeed += 0.05f;
-				std::cout << "Jump speed: " << m_jumpSpeed << std::endl;
-			}
-
-			if (sf::Keyboard::S == event.key.code)
-			{
-				m_jumpSpeed -= 0.05f;
-				std::cout << "Jump speed: " << m_jumpSpeed << std::endl;
-			}
 		}
 
 		if (sf::Event::MouseButtonPressed == event.type)
@@ -353,16 +330,15 @@ void Game::moveCube()
 		x_offset = SCREEN_START;
 	}
 
-	if (m_jumping)
+	// Bounce cube along
+	m_angle += 6;
+	m_sine = sinf(m_angle * (3.14159 / 180.0f));
+	float m_sine2{ sinf((m_angle + 90) * (3.14159 / 180.0f)) };
+
+	for (int i = 0; i < NUM_CUBES; i++)
 	{
-		m_velocity.y += m_gravity;
-		y_offset += m_velocity.y;
-	}
-	if (y_offset < GROUND_POS)
-	{
-		m_jumping = false;
-		m_velocity.y = 0.0f;
-		y_offset = GROUND_POS;
+		model[i] = glm::rotate(modelPos[i], (m_sine2 / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f });
+		model[i] = glm::translate(model[i], glm::vec3{ 0.0f, glm::abs(m_sine / 2.0f), 0.0f });
 	}
 }
 

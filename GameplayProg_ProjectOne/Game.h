@@ -120,21 +120,22 @@ private:
 
 	// Model View Projection
 	glm::mat4 model[NUM_CUBES];
+	glm::mat4 modelPos[NUM_CUBES]; // Keep track of the position without rotation applied
 	glm::mat4 view;
 	glm::mat4 projection;
-	glm::mat4 mvp[NUM_CUBES];
-		
+	glm::mat4 mvp[NUM_CUBES];	
 
 	float x_offset, y_offset, z_offset; // offset on screen (Vertex Shader)
 
 	const float GROUND_POS{ (-10.0f)};
 	const float SCREEN_START{ -20.0f };
 	const float SCREEN_END{ 20.0f };
-	float m_gravity{ -0.02f };
-	float m_jumpSpeed{ 0.2f };
 	sf::Vector2f m_velocity{ 0.1f,0.0f };
 
-	bool m_jumping{ false };
+	// SINE CODE
+
+	int m_angle{ 0 };
+	float m_sine;
 
 };
 #endif
