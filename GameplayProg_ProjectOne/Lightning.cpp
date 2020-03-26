@@ -12,7 +12,7 @@ void Lightning::strike(sf::Vector2i t_target)
 	Bolt bolt;
 
 	// Directly above the target point with an x-offset of +/- 50px
-	sf::Vector2f OriginPos = { static_cast<float>(t_target.x + rand() % 100 - 50), 0.0f };
+	sf::Vector2f originPos = { static_cast<float>(t_target.x + rand() % 100 - 50), 0.0f };
 
 	// At what point along the line will we 'break'
 	std::vector<float> breakPoint;
@@ -28,7 +28,7 @@ void Lightning::strike(sf::Vector2i t_target)
 	std::sort(breakPoint.begin(), breakPoint.end());
 
 	// Start and end of each line segment
-	sf::Vector2f start{ OriginPos };
+	sf::Vector2f start{ originPos };
 	sf::Vector2f end;
 
 	for (int i = 0; i < breakPoint.size() - 1; i++)

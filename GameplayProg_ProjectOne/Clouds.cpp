@@ -70,8 +70,8 @@ void Clouds::update(sf::Time t_dT)
 			c.growing = true;
 		}
 
-		// random between 0.00 and 0.15
-		float deltaRad{ (rand() % 15) / 100.0f };
+		// random between 0.00 and 0.10
+		float deltaRad{ (rand() % 10) / 100.0f };
 		c.rad += (c.growing) ? deltaRad : -deltaRad;
 
 		// Update our radius

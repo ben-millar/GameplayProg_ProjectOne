@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\ASSETS">
+      <UniqueIdentifier>{94533af5-f03e-462d-a508-bbed7f14fbed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ASSETS\TEXTURES">
+      <UniqueIdentifier>{4f8e22ad-06ea-4f99-8706-7c0b78dbca56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ASSETS\SHADERS">
+      <UniqueIdentifier>{31ad7970-3e11-4f2c-a622-65bd57f3f50b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,6 +36,9 @@
     <ClCompile Include="Lightning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -38,5 +50,33 @@
     <ClInclude Include="Lightning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ASSETS\TEXTURES\background.png">
+      <Filter>Resource Files\ASSETS\TEXTURES</Filter>
+    </Image>
+    <Image Include="ASSETS\TEXTURES\cloud.png">
+      <Filter>Resource Files\ASSETS\TEXTURES</Filter>
+    </Image>
+    <Image Include="ASSETS\TEXTURES\grid_wip.tga">
+      <Filter>Resource Files\ASSETS\TEXTURES</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ASSETS\SHADERS\frag.shader">
+      <Filter>Resource Files\ASSETS\SHADERS</Filter>
+    </None>
+    <None Include="ASSETS\SHADERS\vert.shader">
+      <Filter>Resource Files\ASSETS\SHADERS</Filter>
+    </None>
   </ItemGroup>
 </Project>
