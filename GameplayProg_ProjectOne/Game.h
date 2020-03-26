@@ -69,6 +69,12 @@ private:
 	/// </summary>
 	void render();
 
+	/// <summary>
+	/// @brief Renders a cube on-screen
+	/// </summary>
+	/// <param name="t_mvp">MVP of cube to draw</param>
+	void renderCube(const glm::mat4& t_mvp);
+
 	// *** Objects ***
 	sf::RenderWindow m_window;
 
@@ -79,6 +85,8 @@ private:
 
 	Clouds* m_clouds;
 	Lightning m_lightning;
+
+	static const int NUM_CUBES{ 3 };
 
 	// *** OpenGL Variables ***
 
@@ -110,16 +118,19 @@ private:
 
 	unsigned char* img_data;		// image data
 
-	glm::mat4 mvp, projection,
-		view, model;			// Model View Projection
-
+	// Model View Projection
+	glm::mat4 model[NUM_CUBES];
+	glm::mat4 view;
+	glm::mat4 projection;
+	glm::mat4 mvp[NUM_CUBES];
+		
 
 	float x_offset, y_offset, z_offset; // offset on screen (Vertex Shader)
 
-	const float GROUND_POS{ -5.5f };
-	const float SCREEN_START{ -11.0f };
-	const float SCREEN_END{ 11.0f };
-	float m_gravity{ -0.015f };
+	const float GROUND_POS{ (-10.0f)};
+	const float SCREEN_START{ -20.0f };
+	const float SCREEN_END{ 20.0f };
+	float m_gravity{ -0.02f };
 	float m_jumpSpeed{ 0.2f };
 	sf::Vector2f m_velocity{ 0.1f,0.0f };
 

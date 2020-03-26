@@ -48,16 +48,6 @@ void Game::run()
 
 void Game::initialise()
 {
-	/*glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0, m_window.getSize().x / m_window.getSize().y, 1.0, 500.0);
-	glMatrixMode(GL_MODELVIEW);
-
-	glEnable(GL_CULL_FACE);
-
-	glTranslatef(0.0f, 0.0f, -8.0f);*/
-
 	GLint isCompiled = 0;
 	GLint isLinked = 0;
 
@@ -142,23 +132,24 @@ void Game::initialise()
 
 	// Projection Matrix 
 	projection = glm::perspective(
-		45.0f,					// Field of View 45 degrees
-		4.0f / 3.0f,			// Aspect ratio
-		5.0f,					// Display Range Min : 0.1f unit
-		100.0f					// Display Range Max : 100.0f unit
+		45.0f,			// Field of View 45 degrees
+		(4.0f / 3.0f),	// Aspect ratio
+		5.0f,			// Display Range Min : 0.1f unit
+		100.0f			// Display Range Max : 100.0f unit
 	);
 
 	// Camera Matrix
 	view = lookAt(
-		glm::vec3(0.0f, 4.0f, 10.0f),	// Camera (x,y,z), in World Space
+		glm::vec3(0.0f, 4.0f, 20.0f),	// Camera (x,y,z), in World Space
 		glm::vec3(0.0f, 0.0f, 0.0f),		// Camera looking at origin
-		glm::vec3(0.0f, 1.0f, 0.0f)		// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
+		glm::vec3(0.0f, 0.5f, 0.0f)		// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
 	);
 
 	// Model matrix
-	model = glm::mat4(
-		1.0f					// Identity Matrix
-	);
+	for (int i = 0; i < NUM_CUBES; i++) { model[i] = glm::mat4(1.0f); } // Identity matrix
+
+	model[0] = glm::translate(model[0], glm::vec3{ -5.0f, 0.0f, 0.0f });
+	model[2] = glm::translate(model[2], glm::vec3{ 5.0f, 0.0f, 0.0f });
 
 	// Set cube initial position
 	y_offset = GROUND_POS;
@@ -346,7 +337,7 @@ void Game::update(sf::Time t_deltaTime)
 	// Update Model View Projection
 	// For mutiple objects (cubes) create multiple models
 	// To alter Camera modify view & projection
-	mvp = projection * view * model;
+	for (int i = 0; i < NUM_CUBES; i++) { mvp[i] = projection * view * model[i]; }
 }
 
 ///////////////////////////////////////////////////////////////
@@ -400,6 +391,29 @@ void Game::render()
 	// Use Progam on GPU
 	glUseProgram(progID);
 
+	// Draw each cube on-screen
+	for (int i = 0; i < NUM_CUBES; i++) { renderCube(mvp[i]); }
+
+	m_window.display();
+
+	// Unbind Buffers with 0 (Resets OpenGL States...important step)
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	// Reset the Shader Program to Use
+	glUseProgram(0);
+
+	// Check for OpenGL Error code
+	error = glGetError();
+	if (error != GL_NO_ERROR) {
+		//DEBUG_MSG(error);
+	}
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::renderCube(const glm::mat4& t_mvp)
+{
 	// Find variables within the shader
 	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetAttribLocation.xml
 	positionID = glGetAttribLocation(progID, "sv_position");
@@ -432,7 +446,7 @@ void Game::render()
 	glBufferSubData(GL_ARRAY_BUFFER, ((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat), 2 * UVS * sizeof(GLfloat), uvs);
 
 	// Send transformation to shader mvp uniform [0][0] is start of array
-	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &t_mvp[0][0]);
 
 	// Set Active Texture .... 32 GL_TEXTURE0 .... GL_TEXTURE31
 	//glActiveTexture(GL_TEXTURE0);
@@ -457,23 +471,9 @@ void Game::render()
 
 	// Draw Element Arrays
 	glDrawElements(GL_TRIANGLES, 3 * INDICES, GL_UNSIGNED_INT, NULL);
-	m_window.display();
 
 	// Disable Arrays
 	glDisableVertexAttribArray(positionID);
 	glDisableVertexAttribArray(colorID);
 	glDisableVertexAttribArray(uvID);
-
-	// Unbind Buffers with 0 (Resets OpenGL States...important step)
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// Reset the Shader Program to Use
-	glUseProgram(0);
-
-	// Check for OpenGL Error code
-	error = glGetError();
-	if (error != GL_NO_ERROR) {
-		//DEBUG_MSG(error);
-	}
 }
