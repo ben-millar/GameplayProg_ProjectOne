@@ -36,9 +36,6 @@
     <ClCompile Include="Lightning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stb_image.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

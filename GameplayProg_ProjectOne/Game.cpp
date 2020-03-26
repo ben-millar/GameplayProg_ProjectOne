@@ -106,9 +106,11 @@ void Game::initialise()
 	// Popular our bound vbo with data
 	glBufferData(GL_ARRAY_BUFFER, VERTICES * sizeof(GLfloat) * 3, vertices, GL_STATIC_DRAW);
 
+	progID = glCreateProgram();
+
 	// compile and link our shaders
 	setupShader(GL_VERTEX_SHADER, vsid, "ASSETS\\SHADERS\\vert.shader");
-	setupShader(GL_VERTEX_SHADER, fsid, "ASSETS\\SHADERS\\frag.shader");
+	setupShader(GL_FRAGMENT_SHADER, fsid, "ASSETS\\SHADERS\\frag.shader");
 
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &to[0]);
@@ -170,8 +172,6 @@ void Game::initialise()
 
 void Game::setupShader(GLenum t_type, GLuint& t_shaderID, std::string t_filePath)
 {
-	progID = glCreateProgram();
-
 	std::string src{ loadShader(t_filePath) };
 
 	t_shaderID = compileShader(t_type, src);

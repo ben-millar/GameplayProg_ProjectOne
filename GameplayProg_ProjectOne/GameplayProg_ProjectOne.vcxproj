@@ -139,7 +139,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Lightning.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stb_image.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clouds.h" />
