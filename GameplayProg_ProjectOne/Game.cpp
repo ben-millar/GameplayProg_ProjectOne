@@ -87,12 +87,12 @@ void Game::initialise()
 
 	//// Set image data
 	//// https://github.com/nothings/stb/blob/master/stb_image.h
-	img_data = stbi_load(filename.c_str(), &width, &height, &comp_count, 4);
+	/*img_data = stbi_load(filename.c_str(), &width, &height, &comp_count, 4);
 
 	if (img_data == NULL)
 	{
 		DEBUG_MSG("ERROR: Texture not loaded");
-	}
+	}*/
 
 
 	// Vertex Array Buffer
@@ -112,33 +112,33 @@ void Game::initialise()
 	setupShader(GL_VERTEX_SHADER, vsid, "ASSETS\\SHADERS\\vert.shader");
 	setupShader(GL_FRAGMENT_SHADER, fsid, "ASSETS\\SHADERS\\frag.shader");
 
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &to[0]);
-	glBindTexture(GL_TEXTURE_2D, to[0]);
+	//glEnable(GL_TEXTURE_2D);
+	//glGenTextures(1, &to[0]);
+	//glBindTexture(GL_TEXTURE_2D, to[0]);
 
-	// Wrap around
-	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	//// Wrap around
+	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	// Filtering
-	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//// Filtering
+	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Bind to OpenGL
-	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
-	glTexImage2D(
-		GL_TEXTURE_2D,			// 2D Texture Image
-		0,						// Mipmapping Level 
-		GL_RGBA,				// GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_BGR, GL_RGBA 
-		width,					// Width
-		height,					// Height
-		0,						// Border
-		GL_RGBA,				// Bitmap
-		GL_UNSIGNED_BYTE,		// Specifies Data type of image data
-		img_data				// Image Data
-	);
+	//// Bind to OpenGL
+	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+	//glTexImage2D(
+	//	GL_TEXTURE_2D,			// 2D Texture Image
+	//	0,						// Mipmapping Level 
+	//	GL_RGBA,				// GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_BGR, GL_RGBA 
+	//	width,					// Width
+	//	height,					// Height
+	//	0,						// Border
+	//	GL_RGBA,				// Bitmap
+	//	GL_UNSIGNED_BYTE,		// Specifies Data type of image data
+	//	img_data				// Image Data
+	//);
 
 	// Projection Matrix 
 	projection = glm::perspective(
@@ -160,12 +160,16 @@ void Game::initialise()
 		1.0f					// Identity Matrix
 	);
 
+	// Set cube initial position
+	y_offset = GROUND_POS;
+	x_offset = SCREEN_START;
+
 	// Enable Depth Test
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 
-	//glUseProgram(progID);
+	glUseProgram(progID);
 }
 
 ///////////////////////////////////////////////////////////////
@@ -283,6 +287,39 @@ void Game::processEvents()
 			{
 				m_exitGame = true;
 			}
+
+			if (sf::Keyboard::Space == event.key.code)
+			{
+				if (!m_jumping)
+				{
+					m_jumping = true;
+					m_velocity.y = m_jumpSpeed;
+				}
+			}
+
+			if (sf::Keyboard::Q == event.key.code)
+			{
+				m_gravity -= 0.005f;
+				std::cout << "Gravity: " << m_gravity << std::endl;
+			}
+
+			if (sf::Keyboard::A == event.key.code)
+			{
+				m_gravity += 0.005f;
+				std::cout << "Gravity: " << m_gravity << std::endl;
+			}
+
+			if (sf::Keyboard::W == event.key.code)
+			{
+				m_jumpSpeed += 0.05f;
+				std::cout << "Jump speed: " << m_jumpSpeed << std::endl;
+			}
+
+			if (sf::Keyboard::S == event.key.code)
+			{
+				m_jumpSpeed -= 0.05f;
+				std::cout << "Jump speed: " << m_jumpSpeed << std::endl;
+			}
 		}
 
 		if (sf::Event::MouseButtonPressed == event.type)
@@ -304,10 +341,38 @@ void Game::update(sf::Time t_deltaTime)
 	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 
+	moveCube();
+
 	// Update Model View Projection
 	// For mutiple objects (cubes) create multiple models
 	// To alter Camera modify view & projection
 	mvp = projection * view * model;
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::moveCube()
+{
+	if (x_offset < SCREEN_END)
+	{
+		x_offset += m_velocity.x;
+	}
+	else
+	{
+		x_offset = SCREEN_START;
+	}
+
+	if (m_jumping)
+	{
+		m_velocity.y += m_gravity;
+		y_offset += m_velocity.y;
+	}
+	if (y_offset < GROUND_POS)
+	{
+		m_jumping = false;
+		m_velocity.y = 0.0f;
+		y_offset = GROUND_POS;
+	}
 }
 
 ///////////////////////////////////////////////////////////////
@@ -346,8 +411,8 @@ void Game::render()
 	uvID = glGetAttribLocation(progID, "sv_uv");
 	if (uvID < 0) { DEBUG_MSG("uvID not found"); }
 
-	textureID = glGetUniformLocation(progID, "f_texture");
-	if (textureID < 0) { DEBUG_MSG("textureID not found"); }
+	//textureID = glGetUniformLocation(progID, "f_texture");
+	//if (textureID < 0) { DEBUG_MSG("textureID not found"); }
 
 	mvpID = glGetUniformLocation(progID, "sv_mvp");
 	if (mvpID < 0) { DEBUG_MSG("mvpID not found"); }
@@ -370,13 +435,13 @@ void Game::render()
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
 	// Set Active Texture .... 32 GL_TEXTURE0 .... GL_TEXTURE31
-	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(textureID, 0); // 0 .... 31
+	//glActiveTexture(GL_TEXTURE0);
+	//glUniform1i(textureID, 0); // 0 .... 31
 
 	// Set the X, Y and Z offset (this allows for multiple cubes via different shaders)
 	// Experiment with these values to change screen positions
-	glUniform1f(x_offsetID, 0.00f);
-	glUniform1f(y_offsetID, 0.00f);
+	glUniform1f(x_offsetID, x_offset);
+	glUniform1f(y_offsetID, y_offset);
 	glUniform1f(z_offsetID, 0.00f);
 
 	// Set pointers for each parameter (with appropriate starting positions)
@@ -409,6 +474,6 @@ void Game::render()
 	// Check for OpenGL Error code
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
-		DEBUG_MSG(error);
+		//DEBUG_MSG(error);
 	}
 }

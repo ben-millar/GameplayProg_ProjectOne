@@ -60,6 +60,11 @@ private:
 	void update(sf::Time t_deltaTime);
 
 	/// <summary>
+	/// @brief Animates our cube across the screen
+	/// </summary>
+	void moveCube();
+
+	/// <summary>
 	/// @brief Handles the render loop; drawing and flipper framebuffer
 	/// </summary>
 	void render();
@@ -110,6 +115,15 @@ private:
 
 
 	float x_offset, y_offset, z_offset; // offset on screen (Vertex Shader)
+
+	const float GROUND_POS{ -5.5f };
+	const float SCREEN_START{ -11.0f };
+	const float SCREEN_END{ 11.0f };
+	float m_gravity{ -0.015f };
+	float m_jumpSpeed{ 0.2f };
+	sf::Vector2f m_velocity{ 0.1f,0.0f };
+
+	bool m_jumping{ false };
 
 };
 #endif
