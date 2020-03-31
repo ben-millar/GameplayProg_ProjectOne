@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "Debug.h"
+#include "GameObject.h"
 #include "Cube.h"
 #include "Clouds.h"
 #include "Lightning.h"
@@ -73,7 +74,7 @@ private:
 	/// @brief Renders a cube on-screen
 	/// </summary>
 	/// <param name="t_mvp">MVP of cube to draw</param>
-	void renderCube(const glm::mat4& t_mvp);
+	void renderCube(const GameObject& t_gameObject);
 
 	// *** Objects ***
 	sf::RenderWindow m_window;
@@ -86,7 +87,7 @@ private:
 	Clouds* m_clouds;
 	Lightning m_lightning;
 
-	static const int NUM_CUBES{ 3 };
+	static const int NUM_CUBES{ 8 };
 
 	// *** OpenGL Variables ***
 
@@ -118,14 +119,12 @@ private:
 
 	unsigned char* img_data;		// image data
 
+	GameObject m_gameObject[NUM_CUBES];
+
 	// Model View Projection
-	glm::mat4 model[NUM_CUBES];
-	glm::mat4 modelPos[NUM_CUBES]; // Keep track of the position without rotation applied
 	glm::mat4 view;
 	glm::mat4 projection;
-	glm::mat4 mvp[NUM_CUBES];	
-
-	float x_offset, y_offset, z_offset; // offset on screen (Vertex Shader)
+	glm::mat4 mvp;	
 
 	const float GROUND_POS{ (-10.0f)};
 	const float SCREEN_START{ -20.0f };

@@ -148,22 +148,15 @@ void Game::initialise()
 	// Model matrix
 	for (int i = 0; i < NUM_CUBES; i++) 
 	{ 
-		model[i] = glm::mat4(1.0f); // Identity matrix
-
-		model[i] = glm::translate(model[i], glm::vec3{ 0.0f, GROUND_POS, 0.0f }); // Move to ground level
+		// Identity matrix translated to ground level
+		m_gameObject[i].setModel(glm::translate(glm::mat4(1.0f), glm::vec3{ 0.0f, GROUND_POS, 0.0f }));
+		m_gameObject[i].setModelPos(m_gameObject[i].getModel());
 	} 
 
-	model[0] = glm::translate(model[0], glm::vec3{ -5.0f, 0.0f, 0.0f });
-	model[2] = glm::translate(model[2], glm::vec3{ 5.0f, 0.0f, 0.0f });
-	
 	for (int i = 0; i < NUM_CUBES; i++)
 	{
-		modelPos[i] = model[i]; // Preserve true position
+		m_gameObject[i].xOffset(SCREEN_START - (5.0f * i));
 	}
-
-	// Set cube initial position
-//	y_offset = GROUND_POS;
-	x_offset = SCREEN_START;
 
 	// Enable Depth Test
 	glEnable(GL_DEPTH_TEST);
@@ -310,35 +303,41 @@ void Game::update(sf::Time t_deltaTime)
 	m_clouds->update(t_deltaTime);
 
 	moveCube();
-
-	// Update Model View Projection
-	// For mutiple objects (cubes) create multiple models
-	// To alter Camera modify view & projection
-	for (int i = 0; i < NUM_CUBES; i++) { mvp[i] = projection * view * model[i]; }
 }
 
 ///////////////////////////////////////////////////////////////
 
 void Game::moveCube()
 {
-	if (x_offset < SCREEN_END)
+	for (int i = 0; i < NUM_CUBES; i++)
 	{
-		x_offset += m_velocity.x;
-	}
-	else
-	{
-		x_offset = SCREEN_START;
+		if (m_gameObject[i].xOffset() < SCREEN_END)
+		{
+			m_gameObject[i].xOffset(m_gameObject[i].xOffset() + m_velocity.x);
+		}
+		else
+		{
+			m_gameObject[i].xOffset(SCREEN_START);
+		}
 	}
 
 	// Bounce cube along
 	m_angle += 6;
+
+	// Sine wave generation
 	m_sine = sinf(m_angle * (3.14159 / 180.0f));
+
+	// Second sine wave 90 degrees out of phase
 	float m_sine2{ sinf((m_angle + 90) * (3.14159 / 180.0f)) };
 
 	for (int i = 0; i < NUM_CUBES; i++)
 	{
-		model[i] = glm::rotate(modelPos[i], (m_sine2 / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f });
-		model[i] = glm::translate(model[i], glm::vec3{ 0.0f, glm::abs(m_sine / 2.0f), 0.0f });
+		glm::mat4 model{ m_gameObject[i].getModelPos() };
+
+		model = glm::rotate(model, (m_sine2 / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f }); // rotate through the sine value
+		model = glm::translate(model, glm::vec3{ 0.0f, glm::abs(m_sine / 2.0f), 0.0f }); // set y-value to abs value of sine
+
+		m_gameObject[i].setModel(model);
 	}
 }
 
@@ -368,7 +367,7 @@ void Game::render()
 	glUseProgram(progID);
 
 	// Draw each cube on-screen
-	for (int i = 0; i < NUM_CUBES; i++) { renderCube(mvp[i]); }
+	for (int i = 0; i < NUM_CUBES; i++) { renderCube(m_gameObject[i]); }
 
 	m_window.display();
 
@@ -388,7 +387,7 @@ void Game::render()
 
 ///////////////////////////////////////////////////////////////
 
-void Game::renderCube(const glm::mat4& t_mvp)
+void Game::renderCube(const GameObject& t_gameObject)
 {
 	// Find variables within the shader
 	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetAttribLocation.xml
@@ -421,8 +420,11 @@ void Game::renderCube(const glm::mat4& t_mvp)
 	glBufferSubData(GL_ARRAY_BUFFER, 3 * VERTICES * sizeof(GLfloat), 4 * COLORS * sizeof(GLfloat), colors);
 	glBufferSubData(GL_ARRAY_BUFFER, ((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat), 2 * UVS * sizeof(GLfloat), uvs);
 
+	// update MVP with current objects model
+	mvp = projection * view * t_gameObject.getModel();
+
 	// Send transformation to shader mvp uniform [0][0] is start of array
-	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &t_mvp[0][0]);
+	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
 	// Set Active Texture .... 32 GL_TEXTURE0 .... GL_TEXTURE31
 	//glActiveTexture(GL_TEXTURE0);
@@ -430,9 +432,9 @@ void Game::renderCube(const glm::mat4& t_mvp)
 
 	// Set the X, Y and Z offset (this allows for multiple cubes via different shaders)
 	// Experiment with these values to change screen positions
-	glUniform1f(x_offsetID, x_offset);
-	glUniform1f(y_offsetID, y_offset);
-	glUniform1f(z_offsetID, 0.00f);
+	glUniform1f(x_offsetID, t_gameObject.xOffset());
+	glUniform1f(y_offsetID, t_gameObject.yOffset());
+	glUniform1f(z_offsetID, t_gameObject.zOffset());
 
 	// Set pointers for each parameter (with appropriate starting positions)
 	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
