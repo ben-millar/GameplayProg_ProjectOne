@@ -29,5 +29,7 @@ private:
 	glm::mat4 m_model;
 	glm::mat4 m_modelPos; // Keep track of the position without rotation animation applied
 
-	float m_xOffset, m_yOffset, m_zOffset{ 0.0f };
+	float m_xOffset{ 0.0f }; 
+	float m_yOffset{ 0.0f }; 
+	float m_zOffset{ 0.0f };
 };

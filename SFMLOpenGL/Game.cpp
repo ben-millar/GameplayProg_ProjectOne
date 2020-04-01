@@ -74,61 +74,48 @@ void Game::initialise()
 	// Indices to be drawn
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * INDICES * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
-
-	//// Set image data
-	//// https://github.com/nothings/stb/blob/master/stb_image.h
-	/*img_data = stbi_load(filename.c_str(), &width, &height, &comp_count, 4);
-
-	if (img_data == NULL)
-	{
-		DEBUG_MSG("ERROR: Texture not loaded");
-	}*/
-
-
-	// Vertex Array Buffer
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	// Setup our stride
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 3, 0);
-
-	// Popular our bound vbo with data
-	glBufferData(GL_ARRAY_BUFFER, VERTICES * sizeof(GLfloat) * 3, vertices, GL_STATIC_DRAW);
-
 	progID = glCreateProgram();
 
 	// compile and link our shaders
 	setupShader(GL_VERTEX_SHADER, vsid, "ASSETS\\SHADERS\\vert.shader");
 	setupShader(GL_FRAGMENT_SHADER, fsid, "ASSETS\\SHADERS\\frag.shader");
 
-	//glEnable(GL_TEXTURE_2D);
-	//glGenTextures(1, &to[0]);
-	//glBindTexture(GL_TEXTURE_2D, to[0]);
+	// Set image data
+	// https://github.com/nothings/stb/blob/master/stb_image.h
+	img_data = stbi_load(filename.c_str(), &width, &height, &comp_count, 4);
 
-	//// Wrap around
-	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	if (img_data == NULL)
+	{
+		DEBUG_MSG("ERROR: Texture not loaded");
+	}
 
-	//// Filtering
-	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &to[0]);
+	glBindTexture(GL_TEXTURE_2D, to[0]);
 
-	//// Bind to OpenGL
-	//// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
-	//glTexImage2D(
-	//	GL_TEXTURE_2D,			// 2D Texture Image
-	//	0,						// Mipmapping Level 
-	//	GL_RGBA,				// GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_BGR, GL_RGBA 
-	//	width,					// Width
-	//	height,					// Height
-	//	0,						// Border
-	//	GL_RGBA,				// Bitmap
-	//	GL_UNSIGNED_BYTE,		// Specifies Data type of image data
-	//	img_data				// Image Data
-	//);
+	// Wrap around
+	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	// Filtering
+	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Bind to OpenGL
+	// https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+	glTexImage2D(
+		GL_TEXTURE_2D,			// 2D Texture Image
+		0,						// Mipmapping Level 
+		GL_RGBA,				// GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_RGB, GL_BGR, GL_RGBA 
+		width,					// Width
+		height,					// Height
+		0,						// Border
+		GL_RGBA,				// Bitmap
+		GL_UNSIGNED_BYTE,		// Specifies Data type of image data
+		img_data				// Image Data
+	);
 
 	// Projection Matrix 
 	projection = glm::perspective(
@@ -371,6 +358,11 @@ void Game::render()
 
 	m_window.display();
 
+	// Disable Arrays
+	glDisableVertexAttribArray(positionID);
+	glDisableVertexAttribArray(colorID);
+	glDisableVertexAttribArray(uvID);
+
 	// Unbind Buffers with 0 (Resets OpenGL States...important step)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -400,8 +392,8 @@ void Game::renderCube(const GameObject& t_gameObject)
 	uvID = glGetAttribLocation(progID, "sv_uv");
 	if (uvID < 0) { DEBUG_MSG("uvID not found"); }
 
-	//textureID = glGetUniformLocation(progID, "f_texture");
-	//if (textureID < 0) { DEBUG_MSG("textureID not found"); }
+	textureID = glGetUniformLocation(progID, "f_texture");
+	if (textureID < 0) { DEBUG_MSG("textureID not found"); }
 
 	mvpID = glGetUniformLocation(progID, "sv_mvp");
 	if (mvpID < 0) { DEBUG_MSG("mvpID not found"); }
@@ -427,8 +419,8 @@ void Game::renderCube(const GameObject& t_gameObject)
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
 	// Set Active Texture .... 32 GL_TEXTURE0 .... GL_TEXTURE31
-	//glActiveTexture(GL_TEXTURE0);
-	//glUniform1i(textureID, 0); // 0 .... 31
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(textureID, 0); // 0 .... 31
 
 	// Set the X, Y and Z offset (this allows for multiple cubes via different shaders)
 	// Experiment with these values to change screen positions
@@ -449,9 +441,4 @@ void Game::renderCube(const GameObject& t_gameObject)
 
 	// Draw Element Arrays
 	glDrawElements(GL_TRIANGLES, 3 * INDICES, GL_UNSIGNED_INT, NULL);
-
-	// Disable Arrays
-	glDisableVertexAttribArray(positionID);
-	glDisableVertexAttribArray(colorID);
-	glDisableVertexAttribArray(uvID);
 }
