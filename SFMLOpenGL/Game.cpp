@@ -286,6 +286,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
+
 	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 

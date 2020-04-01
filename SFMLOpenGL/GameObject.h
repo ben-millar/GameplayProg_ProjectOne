@@ -1,12 +1,14 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "CollisionHandler.h"
+#include "CoordinateConverter.h"
 
 class GameObject
 {
 public:
 
-	GameObject() = default;
+	GameObject();
 	~GameObject() = default;
 
 	inline glm::mat4 getModel() const { return m_model; }
@@ -24,6 +26,11 @@ public:
 	inline float zOffset() const { return m_zOffset; }
 	inline void zOffset(float t_zOffset) { m_zOffset = t_zOffset; }
 
+	/// <summary>
+	/// @brief Return our bounding box for collision checking
+	/// </summary>
+	c2AABB getBounds();
+
 private:
 
 	glm::mat4 m_model;
@@ -32,4 +39,6 @@ private:
 	float m_xOffset{ 0.0f }; 
 	float m_yOffset{ 0.0f }; 
 	float m_zOffset{ 0.0f };
+
+	c2AABB m_boundingBox;
 };

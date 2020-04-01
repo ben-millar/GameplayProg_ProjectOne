@@ -11,6 +11,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "CollisionHandler.h"
+
 #include "Debug.h"
 #include "GameObject.h"
 #include "Cube.h"
