@@ -1,6 +1,8 @@
 // Author: Ben Millar C00236772
 // Date: 18/03/2020
 
+#define TINYC2_IMPL
+
 #include "Game.h"
 
 int main()

@@ -158,6 +158,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GLOBALS.h" />
     <ClInclude Include="Lightning.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="tinyc2.h" />

@@ -4,7 +4,7 @@
 #include "stb_image.h"
 
 Game::Game() :
-	m_window{ sf::VideoMode{ 800, 600, 32 }, "Taranis", sf::Style::Close },
+	m_window{ sf::VideoMode{ SCREEN_WIDTH, SCREEN_HEIGHT, 32 }, "Taranis", sf::Style::Close },
 	m_exitGame{ false }
 {
 	initialise();
@@ -120,14 +120,14 @@ void Game::initialise()
 	// Projection Matrix 
 	projection = glm::perspective(
 		45.0f,			// Field of View 45 degrees
-		(4.0f / 3.0f),	// Aspect ratio
+		ASPECT_RATIO,	// Aspect ratio
 		5.0f,			// Display Range Min : 0.1f unit
 		100.0f			// Display Range Max : 100.0f unit
 	);
 
 	// Camera Matrix
 	view = lookAt(
-		glm::vec3(0.0f, 4.0f, 20.0f),	// Camera (x,y,z), in World Space
+		glm::vec3(0.0f, 4.0f, CAMERA_Z_VALUE),	// Camera (x,y,z), in World Space
 		glm::vec3(0.0f, 0.0f, 0.0f),		// Camera looking at origin
 		glm::vec3(0.0f, 0.5f, 0.0f)		// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
 	);
@@ -273,6 +273,28 @@ void Game::processEvents()
 		if (sf::Event::MouseButtonPressed == event.type)
 		{
 			m_lightning.strike({ event.mouseButton.x, event.mouseButton.y });
+
+			checkCollisions(event.mouseButton.x, event.mouseButton.y);
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::checkCollisions(int xPos, int yPos)
+{
+	c2Circle lightningHit;
+
+	lightningHit.p.x = xPos;
+	lightningHit.p.y = yPos;
+
+	lightningHit.r = LIGHTNING_RADIUS;
+
+	for (GameObject& cube : m_gameObjects)
+	{
+		if (CollisionHandler::isColliding(lightningHit, cube.getBounds()))
+		{
+			cube.hit();
 		}
 	}
 }
@@ -289,44 +311,7 @@ void Game::update(sf::Time t_deltaTime)
 	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 
-	updateSine();
-
-	for (GameObject& cube : m_gameObjects) { moveCube(cube); }
-}
-
-///////////////////////////////////////////////////////////////
-
-void Game::moveCube(GameObject& t_gameObject)
-{
-	if (t_gameObject.xOffset() < SCREEN_END)
-	{
-		t_gameObject.xOffset(t_gameObject.xOffset() + m_velocity.x);
-	}
-	else
-	{
-		t_gameObject.xOffset(SCREEN_START);
-	}
-
-	glm::mat4 model{ t_gameObject.getModelPos() };
-
-	model = glm::rotate(model, (m_sine / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f }); // rotate through the sine value
-	model = glm::translate(model, glm::vec3{ 0.0f, glm::abs(m_sine90off / 2.0f), 0.0f }); // set y-value to abs value of sine
-
-	t_gameObject.setModel(model);
-}
-
-///////////////////////////////////////////////////////////////
-
-void Game::updateSine()
-{
-	// Increase angle for sine wave
-	m_angle += 6;
-
-	// Sine wave generation
-	m_sine = sinf(m_angle * (3.14159 / 180.0f));
-
-	// Second sine wave 90 degrees out of phase
-	m_sine90off = sinf((m_angle + 90) * (3.14159 / 180.0f));
+	for (GameObject& cube : m_gameObjects) { cube.update(); }
 }
 
 ///////////////////////////////////////////////////////////////

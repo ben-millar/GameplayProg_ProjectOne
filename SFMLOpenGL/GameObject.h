@@ -1,6 +1,10 @@
 #pragma once
 
+#include "GLOBALS.h"
+
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "CollisionHandler.h"
 #include "CoordinateConverter.h"
 
@@ -26,12 +30,31 @@ public:
 	inline float zOffset() const { return m_zOffset; }
 	inline void zOffset(float t_zOffset) { m_zOffset = t_zOffset; }
 
+	void update();
+
 	/// <summary>
 	/// @brief Return our bounding box for collision checking
 	/// </summary>
 	c2AABB getBounds();
 
+	/// <summary>
+	/// @brief Called when the object is hit by lightning
+	/// </summary>
+	void hit();
+
 private:
+
+	void updateSine();
+
+	void walk();
+	
+	void explode();
+
+	enum class State
+	{
+		WALKING,
+		EXPLODING
+	} m_currentState{ State::WALKING };
 
 	glm::mat4 m_model{ glm::mat4(1.0f) };
 	glm::mat4 m_modelPos{ glm::mat4(1.0f) }; // Keep track of the position without rotation animation applied
@@ -40,5 +63,12 @@ private:
 	float m_yOffset{ 0.0f }; 
 	float m_zOffset{ 0.0f };
 
+	sf::Vector2f m_velocity{ 0.1f,0.0f };
+
 	c2AABB m_boundingBox;
+
+	// Used for our walking animation
+	int m_angle{ 0 }; // used to generate sine wave
+	float m_sine; // sine wave, used for cube rotation
+	float m_sine90off; // 90 degrees out of phase from our original sine way, used for cube bounce
 };

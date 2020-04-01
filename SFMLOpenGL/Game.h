@@ -11,8 +11,9 @@
 #include <fstream>
 #include <sstream>
 
-#include "CollisionHandler.h"
+#include "GLOBALS.h"
 
+#include "CollisionHandler.h"
 #include "Debug.h"
 #include "GameObject.h"
 #include "Cube.h"
@@ -57,20 +58,15 @@ private:
 	void processEvents();
 
 	/// <summary>
+	/// @brief Checks for collisions between lightning hit and game objects
+	/// </summary>
+	void checkCollisions(int xPos, int yPos);
+
+	/// <summary>
 	/// @brief Handles the update loop, called at 60FPS
 	/// </summary>
 	/// <param name="t_deltaTime">time in seconds since the last frame</param>
 	void update(sf::Time t_deltaTime);
-
-	/// <summary>
-	/// @brief Animates our cube across the screen
-	/// </summary>
-	void moveCube(GameObject& t_gameObject);
-
-	/// <summary>
-	/// @brief Updates the sine wave for cube movement
-	/// </summary>
-	void updateSine();
 
 	/// <summary>
 	/// @brief Handles the render loop; drawing and flipper framebuffer
@@ -93,6 +89,9 @@ private:
 
 	Clouds* m_clouds;
 	Lightning m_lightning;
+
+	// How big of a blast zone our lightning hit produces
+	const int LIGHTNING_RADIUS{ 80 };
 
 	static const int NUM_CUBES{ 8 };
 
@@ -132,17 +131,5 @@ private:
 	glm::mat4 view;
 	glm::mat4 projection;
 	glm::mat4 mvp;	
-
-	const float GROUND_POS{ (-10.0f)};
-	const float SCREEN_START{ -20.0f };
-	const float SCREEN_END{ 20.0f };
-	sf::Vector2f m_velocity{ 0.1f,0.0f };
-
-	// SINE CODE
-
-	int m_angle{ 0 }; // used to generate sine wave
-	float m_sine; // sine wave, used for cube rotation
-	float m_sine90off; // 90 degrees out of phase from our original sine way, used for cube bounce
-
 };
 #endif
