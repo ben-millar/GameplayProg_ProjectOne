@@ -65,7 +65,12 @@ private:
 	/// <summary>
 	/// @brief Animates our cube across the screen
 	/// </summary>
-	void moveCube();
+	void moveCube(GameObject& t_gameObject);
+
+	/// <summary>
+	/// @brief Updates the sine wave for cube movement
+	/// </summary>
+	void updateSine();
 
 	/// <summary>
 	/// @brief Handles the render loop; drawing and flipper framebuffer
@@ -121,7 +126,7 @@ private:
 
 	unsigned char* img_data;		// image data
 
-	GameObject m_gameObject[NUM_CUBES];
+	std::array<GameObject, NUM_CUBES> m_gameObjects;
 
 	// Model View Projection
 	glm::mat4 view;
@@ -135,8 +140,9 @@ private:
 
 	// SINE CODE
 
-	int m_angle{ 0 };
-	float m_sine;
+	int m_angle{ 0 }; // used to generate sine wave
+	float m_sine; // sine wave, used for cube rotation
+	float m_sine90off; // 90 degrees out of phase from our original sine way, used for cube bounce
 
 };
 #endif

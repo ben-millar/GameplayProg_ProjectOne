@@ -133,16 +133,16 @@ void Game::initialise()
 	);
 
 	// Model matrix
-	for (int i = 0; i < NUM_CUBES; i++) 
-	{ 
-		// Identity matrix translated to ground level
-		m_gameObject[i].setModel(glm::translate(glm::mat4(1.0f), glm::vec3{ 0.0f, GROUND_POS, 0.0f }));
-		m_gameObject[i].setModelPos(m_gameObject[i].getModel());
-	} 
+	for (GameObject& obj : m_gameObjects)
+	{
+		obj.setModel(glm::translate(glm::mat4(1.0f), glm::vec3{ 0.0f, GROUND_POS, 0.0f }));
+		obj.setModelPos(obj.getModel());
+	}
 
+	// offset each cube from eachother
 	for (int i = 0; i < NUM_CUBES; i++)
 	{
-		m_gameObject[i].xOffset(SCREEN_START - (5.0f * i));
+		m_gameObjects[i].xOffset(SCREEN_START - (5.0f * i));
 	}
 
 	// Enable Depth Test
@@ -286,47 +286,47 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-
 	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 
-	moveCube();
+	updateSine();
+
+	for (GameObject& cube : m_gameObjects) { moveCube(cube); }
 }
 
 ///////////////////////////////////////////////////////////////
 
-void Game::moveCube()
+void Game::moveCube(GameObject& t_gameObject)
 {
-	for (int i = 0; i < NUM_CUBES; i++)
+	if (t_gameObject.xOffset() < SCREEN_END)
 	{
-		if (m_gameObject[i].xOffset() < SCREEN_END)
-		{
-			m_gameObject[i].xOffset(m_gameObject[i].xOffset() + m_velocity.x);
-		}
-		else
-		{
-			m_gameObject[i].xOffset(SCREEN_START);
-		}
+		t_gameObject.xOffset(t_gameObject.xOffset() + m_velocity.x);
+	}
+	else
+	{
+		t_gameObject.xOffset(SCREEN_START);
 	}
 
-	// Bounce cube along
+	glm::mat4 model{ t_gameObject.getModelPos() };
+
+	model = glm::rotate(model, (m_sine / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f }); // rotate through the sine value
+	model = glm::translate(model, glm::vec3{ 0.0f, glm::abs(m_sine90off / 2.0f), 0.0f }); // set y-value to abs value of sine
+
+	t_gameObject.setModel(model);
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::updateSine()
+{
+	// Increase angle for sine wave
 	m_angle += 6;
 
 	// Sine wave generation
 	m_sine = sinf(m_angle * (3.14159 / 180.0f));
 
 	// Second sine wave 90 degrees out of phase
-	float m_sine2{ sinf((m_angle + 90) * (3.14159 / 180.0f)) };
-
-	for (int i = 0; i < NUM_CUBES; i++)
-	{
-		glm::mat4 model{ m_gameObject[i].getModelPos() };
-
-		model = glm::rotate(model, (m_sine2 / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f }); // rotate through the sine value
-		model = glm::translate(model, glm::vec3{ 0.0f, glm::abs(m_sine / 2.0f), 0.0f }); // set y-value to abs value of sine
-
-		m_gameObject[i].setModel(model);
-	}
+	m_sine90off = sinf((m_angle + 90) * (3.14159 / 180.0f));
 }
 
 ///////////////////////////////////////////////////////////////
@@ -355,7 +355,7 @@ void Game::render()
 	glUseProgram(progID);
 
 	// Draw each cube on-screen
-	for (int i = 0; i < NUM_CUBES; i++) { renderCube(m_gameObject[i]); }
+	for (GameObject& cube : m_gameObjects) { renderCube(cube); }
 
 	m_window.display();
 

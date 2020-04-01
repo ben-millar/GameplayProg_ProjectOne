@@ -8,7 +8,7 @@ class GameObject
 {
 public:
 
-	GameObject();
+	GameObject() = default;
 	~GameObject() = default;
 
 	inline glm::mat4 getModel() const { return m_model; }
@@ -33,8 +33,8 @@ public:
 
 private:
 
-	glm::mat4 m_model;
-	glm::mat4 m_modelPos; // Keep track of the position without rotation animation applied
+	glm::mat4 m_model{ glm::mat4(1.0f) };
+	glm::mat4 m_modelPos{ glm::mat4(1.0f) }; // Keep track of the position without rotation animation applied
 
 	float m_xOffset{ 0.0f }; 
 	float m_yOffset{ 0.0f }; 
