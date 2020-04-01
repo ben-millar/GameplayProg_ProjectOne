@@ -112,10 +112,35 @@ static const GLfloat colors[] = {
 
 static GLfloat uvs[2 * 4 * 6] = {
 	// Front Face (other faces populated in initialisation)
-	0.0, 0.0,
-	1.0, 0.0,
-	1.0, 1.0,
-	0.0, 1.0
+	0.75, 0.25,
+	0.75, 0.5,
+	1.0, 0.5,
+	1.0, 0.25,
+	// Top Face
+	0.0, 0.25,
+	0.0, 0.5,
+	0.25, 0.5,
+	0.25, 0.25,
+	// Back Face 
+	0.25, 0.25,
+	0.25, 0.5,
+	0.5, 0.5,
+	0.5, 0.25,
+	// Bottom Face
+	0.5, 0.25,
+	0.5, 0.5,
+	0.75, 0.5,
+	0.75, 0.25,
+	// Left Face
+	0.5, 0.25,
+	0.75, 0.25,
+	0.75, 0.0,
+	0.5, 0.0,
+	// Right Face
+	0.75, 0.5,
+	0.5, 0.5,
+	0.5, 0.75,
+	0.75, 0.75
 };
 
 static const GLuint indices[] =

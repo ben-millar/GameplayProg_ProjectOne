@@ -117,7 +117,7 @@ private:
 
 
 	//Please see .//Assets//Textures// for more textures
-	const std::string filename = ".//ASSETS//TEXTURES//grid_wip.tga";
+	const std::string filename = ".//ASSETS//TEXTURES//box.png";
 
 	int width;						// Width of texture
 	int height;						// Height of texture

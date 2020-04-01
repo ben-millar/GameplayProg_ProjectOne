@@ -2,6 +2,14 @@
 
 ///////////////////////////////////////////////////////////////
 
+GameObject::GameObject()
+{
+	// Start our sin generator at a random angle
+	m_angle = rand() % 360;
+}
+
+///////////////////////////////////////////////////////////////
+
 void GameObject::update()
 {
 	updateSine();
@@ -44,7 +52,7 @@ void GameObject::hit()
 {
 	std::cout << "I'm hit!" << std::endl;
 
-	m_yOffset += 1.0f;
+	m_currentState = State::EXPLODING;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -82,6 +90,7 @@ void GameObject::walk()
 
 void GameObject::explode()
 {
+	m_zOffset -= 0.5f;
 }
 
 ///////////////////////////////////////////////////////////////

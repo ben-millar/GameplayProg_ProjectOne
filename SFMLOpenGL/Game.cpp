@@ -54,8 +54,8 @@ void Game::initialise()
 	if (!(!glewInit())) { DEBUG_MSG("glewInit() failed"); }
 
 	// Copy UV's to all faces
-	for (int i = 1; i < 6; i++)
-		memcpy(&uvs[i * 4 * 2], &uvs[0], 2 * 4 * sizeof(GLfloat));
+	/*for (int i = 1; i < 6; i++)
+		memcpy(&uvs[i * 4 * 2], &uvs[0], 2 * 4 * sizeof(GLfloat));*/
 
 	DEBUG_MSG(glGetString(GL_VENDOR));
 	DEBUG_MSG(glGetString(GL_RENDERER));

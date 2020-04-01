@@ -12,7 +12,7 @@ class GameObject
 {
 public:
 
-	GameObject() = default;
+	GameObject();
 	~GameObject() = default;
 
 	inline glm::mat4 getModel() const { return m_model; }
