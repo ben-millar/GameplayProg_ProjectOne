@@ -22,14 +22,14 @@ public:
 	inline glm::mat4 getModelPos() const { return m_modelPos; }
 	inline void setModelPos(glm::mat4 t_modelPos) { m_modelPos = t_modelPos; }
 
-	inline float xOffset() const { return m_xOffset; }
-	inline void xOffset(float t_xOffset) { m_xOffset = t_xOffset; }
+	inline float xOffset() const { return m_offset.x; }
+	inline void xOffset(float t_xOffset) { m_offset.x = t_xOffset; }
 
-	inline float yOffset() const { return m_yOffset; }
-	inline void yOffset(float t_yOffset) { m_yOffset = t_yOffset; }
+	inline float yOffset() const { return m_offset.y; }
+	inline void yOffset(float t_yOffset) { m_offset.y = t_yOffset; }
 
-	inline float zOffset() const { return m_zOffset; }
-	inline void zOffset(float t_zOffset) { m_zOffset = t_zOffset; }
+	inline float zOffset() const { return m_offset.z; }
+	inline void zOffset(float t_zOffset) { m_offset.z = t_zOffset; }
 
 	GameObject* getNext() const { return m_next; }
 	void setNext(GameObject* t_nextObj) { m_next = t_nextObj; }
@@ -65,11 +65,11 @@ private:
 	glm::mat4 m_model{ glm::mat4(1.0f) };
 	glm::mat4 m_modelPos{ glm::mat4(1.0f) }; // Keep track of the position without rotation animation applied
 
-	float m_xOffset{ 0.0f }; 
-	float m_yOffset{ 0.0f }; 
-	float m_zOffset{ 0.0f };
+	sf::Vector3f m_offset{ 0.0f,0.0f,0.0f };
 
-	sf::Vector2f m_velocity{ 0.1f,0.0f };
+	sf::Vector3f m_velocity{ 0.1f,0.0f,0.0f };
+
+	const float GRAVITY{ 0.03f };
 
 	c2AABB m_boundingBox;
 

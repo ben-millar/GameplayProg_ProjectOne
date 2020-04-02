@@ -87,6 +87,10 @@ private:
 	sf::Texture m_backgroundTexture;
 	sf::Sprite m_backgroundSprite;
 
+	sf::RectangleShape m_lightningFlash;
+	int m_frameCount{ 0 };
+	bool m_drawFlash{ false };
+
 	Clouds* m_clouds;
 	Lightning m_lightning;
 
@@ -127,7 +131,7 @@ private:
 
 	GameObjectPool m_objectPool;
 
-	sf::Time m_cubeDelay{ sf::seconds(1.0f) };
+	sf::Time m_cubeDelay{ sf::seconds(0.5f) };
 	sf::Time m_timeSinceLastCube{ sf::Time::Zero };
 
 	// Model View Projection

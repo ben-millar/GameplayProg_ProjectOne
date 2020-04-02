@@ -12,6 +12,9 @@ Game::Game() :
 	setupBackground();
 
 	m_clouds = new Clouds(m_window.getSize().x, 80);
+
+	m_lightningFlash.setSize({ SCREEN_WIDTH, SCREEN_HEIGHT });
+	m_lightningFlash.setFillColor(sf::Color(255,255,255,192));
 }
 
 ///////////////////////////////////////////////////////////////
@@ -258,6 +261,8 @@ void Game::processEvents()
 			m_lightning.strike({ event.mouseButton.x, event.mouseButton.y });
 
 			checkCollisions(event.mouseButton.x, event.mouseButton.y);
+
+			m_drawFlash = true;
 		}
 	}
 }
@@ -328,6 +333,19 @@ void Game::render()
 	m_window.draw(m_backgroundSprite);
 	m_window.draw(m_lightning);
 	m_window.draw(*m_clouds);
+
+	if (m_drawFlash)
+	{
+		m_window.draw(m_lightningFlash);
+		
+		m_frameCount++;
+
+		if (m_frameCount >= 5)
+		{
+			m_drawFlash = false;
+			m_frameCount = 0;
+		}
+	}
 
 	// Restore our OpenGL render state
 	m_window.popGLStates();

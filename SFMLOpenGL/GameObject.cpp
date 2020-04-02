@@ -15,8 +15,8 @@ void GameObject::init()
 	m_model = glm::translate(glm::mat4(1.0f), glm::vec3{ 0.0f, GROUND_POS, 0.0f });
 	m_modelPos = m_model;
 
-	m_xOffset = SCREEN_START;
-	m_zOffset = 0.0f;
+	m_offset = { SCREEN_START, 0.0f, 0.0f };
+	m_velocity = { 0.1f,0.0f,0.0f };
 
 	m_currentState = State::WALKING;
 
@@ -49,8 +49,8 @@ bool GameObject::update()
 c2AABB GameObject::getBounds()
 {
 	// Update our bounding box before returning it
-	sf::Vector2f minPixPos{ CoordinateConverter::GL_TO_PIXEL({ m_xOffset, 13.0f }) };
-	sf::Vector2f maxPixPos{ CoordinateConverter::GL_TO_PIXEL({ m_xOffset + 2, 17.0f }) };
+	sf::Vector2f minPixPos{ CoordinateConverter::GL_TO_PIXEL({ m_offset.x, 13.0f }) };
+	sf::Vector2f maxPixPos{ CoordinateConverter::GL_TO_PIXEL({ m_offset.x + 2, 17.0f }) };
 
 	m_boundingBox.min.x = minPixPos.x;
 	m_boundingBox.min.y = minPixPos.y;
@@ -68,6 +68,17 @@ c2AABB GameObject::getBounds()
 void GameObject::hit()
 {
 	std::cout << "I'm hit!" << std::endl;
+	
+	// Between -0.25 and 0.25
+	float xVel = (rand() % 51 - 25) / 100.0f;
+
+	// Between 0.75 and 1.0
+	float yVel = (rand() % 25 + 76) / 100.0f;
+
+	// Between 0.1 and 0.35
+	float zVel = (rand() % 26 + 10) / 100.0f;
+
+	m_velocity = { xVel, yVel, zVel };
 
 	m_currentState = State::EXPLODING;
 }
@@ -90,9 +101,9 @@ void GameObject::updateSine()
 
 bool GameObject::walk()
 {
-	if (m_xOffset < SCREEN_END)
+	if (m_offset.x < SCREEN_END)
 	{
-		m_xOffset += m_velocity.x;
+		m_offset += m_velocity;
 	}
 	else
 	{
@@ -110,10 +121,11 @@ bool GameObject::walk()
 
 bool GameObject::explode()
 {
-	m_zOffset -= 0.5f;
+	m_offset += m_velocity;
+	m_velocity.y -= GRAVITY;
 
-	// True if less than 50 away, false if further away
-	return (m_zOffset > -50.0f);
+	// Return false if below the ground position, plus a buffer of 5
+	return (m_offset.y > GROUND_POS - 5.0f);
 }
 
 ///////////////////////////////////////////////////////////////
