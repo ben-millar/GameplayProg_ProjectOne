@@ -31,65 +31,101 @@
     <Filter Include="Resource Files\ASSETS\SHADERS">
       <UniqueIdentifier>{c0d47d0c-3b3e-4df8-9da2-0f2f7c5ce3d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Environment">
+      <UniqueIdentifier>{afa51ff3-4fd7-49f9-9bcc-38d42452601c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Environment">
+      <UniqueIdentifier>{bb8d4b7d-1596-4bec-8829-0213e9f89018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Maths">
+      <UniqueIdentifier>{a9b37063-fe9c-407d-a017-266f68eff88f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Maths">
+      <UniqueIdentifier>{462d8822-417d-4ecf-8654-a4142cb26345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Object">
+      <UniqueIdentifier>{337251fe-b7b6-46f6-9f15-8299778fc8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Object">
+      <UniqueIdentifier>{65e5d364-4571-4cac-beb9-c3f95ec0af7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Texturing">
+      <UniqueIdentifier>{15e6efe8-2c03-403f-a4c2-35d84a7ee2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texturing">
+      <UniqueIdentifier>{832129d1-9b79-4a91-8a8f-b8f2d5e33f66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Collisions">
+      <UniqueIdentifier>{f6e8b5bc-f14a-4f81-ab89-0dac665cd76a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Collisions">
+      <UniqueIdentifier>{fe4fce3d-046b-422f-ba8e-3f4bafffdac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Clouds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="GLOBALS.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Clouds.h">
+      <Filter>Header Files\Environment</Filter>
     </ClInclude>
     <ClInclude Include="Lightning.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Environment</Filter>
     </ClInclude>
     <ClInclude Include="CoordinateConverter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Maths</Filter>
     </ClInclude>
     <ClInclude Include="tinyc2.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files\Game Object</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Texturing</Filter>
     </ClInclude>
     <ClInclude Include="CollisionHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="GLOBALS.h">
+    <ClInclude Include="GameObjectPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stb_image.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Clouds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lightning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Clouds.cpp">
+      <Filter>Source Files\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightning.cpp">
+      <Filter>Source Files\Environment</Filter>
+    </ClCompile>
     <ClCompile Include="CoordinateConverter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game Object</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.c">
+      <Filter>Source Files\Texturing</Filter>
     </ClCompile>
     <ClCompile Include="CollisionHandler.cpp">
+      <Filter>Source Files\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

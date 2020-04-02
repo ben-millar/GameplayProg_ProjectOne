@@ -158,6 +158,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectPool.h" />
     <ClInclude Include="GLOBALS.h" />
     <ClInclude Include="Lightning.h" />
     <ClInclude Include="stb_image.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="CoordinateConverter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectPool.cpp" />
     <ClCompile Include="Lightning.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stb_image.c" />

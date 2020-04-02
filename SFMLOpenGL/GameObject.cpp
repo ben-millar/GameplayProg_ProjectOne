@@ -10,21 +10,38 @@ GameObject::GameObject()
 
 ///////////////////////////////////////////////////////////////
 
-void GameObject::update()
+void GameObject::init()
+{
+	m_model = glm::translate(glm::mat4(1.0f), glm::vec3{ 0.0f, GROUND_POS, 0.0f });
+	m_modelPos = m_model;
+
+	m_xOffset = SCREEN_START;
+	m_zOffset = 0.0f;
+
+	m_currentState = State::WALKING;
+
+	m_active = true;
+}
+
+///////////////////////////////////////////////////////////////
+
+bool GameObject::update()
 {
 	updateSine();
 
 	switch (m_currentState)
 	{
 	case State::WALKING:
-		walk();
+		return walk();
 		break;
 	case State::EXPLODING:
-		explode();
+		return explode();
 		break;
 	default:
 		break;
 	}
+	
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -71,7 +88,7 @@ void GameObject::updateSine()
 
 ///////////////////////////////////////////////////////////////
 
-void GameObject::walk()
+bool GameObject::walk()
 {
 	if (m_xOffset < SCREEN_END)
 	{
@@ -79,18 +96,24 @@ void GameObject::walk()
 	}
 	else
 	{
-		m_xOffset = SCREEN_START;
+		// We've left the screen
+		return false;
 	}
 
 	m_model = glm::rotate(m_modelPos, (m_sine / 3.0f) - 0.2f, glm::vec3{ 1.0f, 0.0f, 0.0f }); // rotate through the sine value
 	m_model = glm::translate(m_model, glm::vec3{ 0.0f, glm::abs(m_sine90off / 2.0f), 0.0f }); // set y-value to abs value of sine
+
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////
 
-void GameObject::explode()
+bool GameObject::explode()
 {
 	m_zOffset -= 0.5f;
+
+	// True if less than 50 away, false if further away
+	return (m_zOffset > -50.0f);
 }
 
 ///////////////////////////////////////////////////////////////

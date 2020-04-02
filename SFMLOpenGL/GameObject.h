@@ -10,6 +10,7 @@
 
 class GameObject
 {
+	friend class GameObjectPool;
 public:
 
 	GameObject();
@@ -30,7 +31,10 @@ public:
 	inline float zOffset() const { return m_zOffset; }
 	inline void zOffset(float t_zOffset) { m_zOffset = t_zOffset; }
 
-	void update();
+	GameObject* getNext() const { return m_next; }
+	void setNext(GameObject* t_nextObj) { m_next = t_nextObj; }
+
+	bool update();
 
 	/// <summary>
 	/// @brief Return our bounding box for collision checking
@@ -44,11 +48,13 @@ public:
 
 private:
 
+	void init();
+
 	void updateSine();
 
-	void walk();
+	bool walk();
 	
-	void explode();
+	bool explode();
 
 	enum class State
 	{
@@ -69,6 +75,12 @@ private:
 
 	// Used for our walking animation
 	int m_angle{ 0 }; // used to generate sine wave
-	float m_sine; // sine wave, used for cube rotation
-	float m_sine90off; // 90 degrees out of phase from our original sine way, used for cube bounce
+	float m_sine{ 0.0f }; // sine wave, used for cube rotation
+	float m_sine90off{ 90.0f }; // 90 degrees out of phase from our original sine way, used for cube bounce
+
+	// Points to the next game object in a singly linked list
+	GameObject* m_next{ nullptr };
+
+	// Keeps track of whether the cube is active or not (on screen, or ready to spawn)
+	bool m_active{ false };
 };

@@ -15,7 +15,7 @@
 
 #include "CollisionHandler.h"
 #include "Debug.h"
-#include "GameObject.h"
+#include "GameObjectPool.h"
 #include "Cube.h"
 #include "Clouds.h"
 #include "Lightning.h"
@@ -125,7 +125,10 @@ private:
 
 	unsigned char* img_data;		// image data
 
-	std::array<GameObject, NUM_CUBES> m_gameObjects;
+	GameObjectPool m_objectPool;
+
+	sf::Time m_cubeDelay{ sf::seconds(1.0f) };
+	sf::Time m_timeSinceLastCube{ sf::Time::Zero };
 
 	// Model View Projection
 	glm::mat4 view;
