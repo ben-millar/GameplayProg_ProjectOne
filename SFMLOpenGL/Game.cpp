@@ -13,7 +13,8 @@ Game::Game() :
 
 	m_clouds = new Clouds(m_window.getSize().x, 80);
 
-	m_lightningFlash.setSize({ SCREEN_WIDTH, SCREEN_HEIGHT });
+	m_lightningFlash.setSize({ SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT + 100.0f });
+	m_lightningFlash.setPosition(-50.0f, -50.0f);
 	m_lightningFlash.setFillColor(sf::Color(255,255,255,192));
 }
 
@@ -230,6 +231,10 @@ try
 	else
 	{
 		m_backgroundSprite.setTexture(m_backgroundTexture);
+
+		// Overdraw slightly to allow for screenshake
+		m_backgroundSprite.setScale(1.1f, 1.1f);
+		m_backgroundSprite.setPosition(-20.0f, -20.0f);
 	}
 }
 catch (const std::exception& e)
@@ -259,6 +264,8 @@ void Game::processEvents()
 		if (sf::Event::MouseButtonPressed == event.type)
 		{
 			m_lightning.strike({ event.mouseButton.x, event.mouseButton.y });
+
+			(m_screenShake < 0.25f) ? m_screenShake += 0.5f : m_screenShake = 0.75f;
 
 			checkCollisions(event.mouseButton.x, event.mouseButton.y);
 
@@ -296,17 +303,19 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
+	// Create new cubes
 	m_timeSinceLastCube += t_deltaTime;
-
 	if (m_timeSinceLastCube > m_cubeDelay)
 	{
 		m_objectPool.create();
 		m_timeSinceLastCube = sf::Time::Zero;
 	}
 
+	// Update our weather effects
 	m_lightning.update(t_deltaTime);
 	m_clouds->update(t_deltaTime);
 
+	// update our cubes
 	for (GameObject* cube : m_objectPool.getActive()) 
 	{ 
 		// Update returns false if cube off-screen
@@ -317,6 +326,38 @@ void Game::update(sf::Time t_deltaTime)
 			m_objectPool.kill(*cube);
 		}
 	}
+
+	// reduce trauma linearly to zero
+	(m_screenShake > 0.0075f) ? m_screenShake -= 0.0075f : m_screenShake = 0.0f;
+
+	shakeScreen();
+}
+
+///////////////////////////////////////////////////////////////
+
+void Game::shakeScreen()
+{
+	sf::View view = m_window.getDefaultView();
+
+	// translational shake
+	float offsetX = (rand() % 201 - 100) / 100.0f;
+	float offsetY = (rand() % 201 - 100) / 100.0f;
+
+	// easing function along the square of our screenshake variable
+	offsetX *= MAX_OFFSET * (m_screenShake * m_screenShake);
+	offsetY *= MAX_OFFSET * (m_screenShake * m_screenShake);
+
+	view.move(offsetX, offsetY);
+
+	// rotational shake
+	float angleOffset = (rand() % 201 - 100) / 100.0f;
+
+	// easing function along the square of our screenshake variable
+	angleOffset *= MAX_ANGLE * (m_screenShake * m_screenShake);
+
+	view.setRotation(angleOffset);
+
+	m_window.setView(view);
 }
 
 ///////////////////////////////////////////////////////////////

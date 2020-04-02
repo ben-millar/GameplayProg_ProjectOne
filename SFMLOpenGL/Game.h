@@ -69,6 +69,11 @@ private:
 	void update(sf::Time t_deltaTime);
 
 	/// <summary>
+	/// @brief Translates and rotates our sf::view based on our screenShake variable
+	/// </summary>
+	void shakeScreen();
+
+	/// <summary>
 	/// @brief Handles the render loop; drawing and flipper framebuffer
 	/// </summary>
 	void render();
@@ -90,6 +95,11 @@ private:
 	sf::RectangleShape m_lightningFlash;
 	int m_frameCount{ 0 };
 	bool m_drawFlash{ false };
+
+	// SCREENSHAKE variables
+	float m_screenShake{ 0.0f }; // scalar for screenshake, normalised to the range 0-1
+	const float MAX_OFFSET = 50.0f; // max translational offset for screenshake
+	const float MAX_ANGLE = 5.0f; // max rotational offset for screenshake
 
 	Clouds* m_clouds;
 	Lightning m_lightning;
@@ -121,7 +131,7 @@ private:
 
 
 	//Please see .//Assets//Textures// for more textures
-	const std::string filename = ".//ASSETS//TEXTURES//box.png";
+	const std::string filename = ".//ASSETS//TEXTURES//grass.png";
 
 	int width;						// Width of texture
 	int height;						// Height of texture
