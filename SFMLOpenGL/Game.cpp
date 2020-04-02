@@ -11,6 +11,8 @@ Game::Game() :
 
 	setupBackground();
 
+	setupAudio();
+
 	m_clouds = new Clouds(m_window.getSize().x, 80);
 
 	m_lightningFlash.setSize({ SCREEN_WIDTH + 100.0f, SCREEN_HEIGHT + 100.0f });
@@ -220,6 +222,27 @@ GLuint Game::compileShader(GLenum t_type, std::string& t_src)
 
 ///////////////////////////////////////////////////////////////
 
+void Game::setupAudio()
+try
+{
+	if (!m_thunderAmbientMusic.openFromFile("ASSETS\\AUDIO\\thunder.wav"))
+	{
+		std::string msg{ "Error loading thunder sfx" };
+		throw std::exception(msg.c_str());
+	}
+	else
+	{
+		m_thunderAmbientMusic.setLoop(true);
+		m_thunderAmbientMusic.play();
+	}
+}
+catch (const std::exception& e)
+{
+	DEBUG_MSG(e.what());
+}
+
+///////////////////////////////////////////////////////////////
+
 void Game::setupBackground()
 try
 {
@@ -239,7 +262,7 @@ try
 }
 catch (const std::exception& e)
 {
-	std::cout << e.what() << std::endl;
+	DEBUG_MSG(e.what());
 }
 
 ///////////////////////////////////////////////////////////////

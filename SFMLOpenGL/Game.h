@@ -8,6 +8,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <fstream>
 #include <sstream>
 
@@ -46,6 +47,11 @@ private:
 	std::string loadShader(std::string t_filePath);
 
 	GLuint compileShader(GLenum t_type, std::string& t_src);
+
+	/// <summary>
+	/// @brief Loads in and initialises our ambient music and sfx
+	/// </summary>
+	void setupAudio();
 
 	/// <summary>
 	/// @brief Loads our background image in from a file
@@ -91,6 +97,8 @@ private:
 
 	sf::Texture m_backgroundTexture;
 	sf::Sprite m_backgroundSprite;
+
+	sf::Music m_thunderAmbientMusic;
 
 	sf::RectangleShape m_lightningFlash;
 	int m_frameCount{ 0 };

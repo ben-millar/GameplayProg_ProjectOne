@@ -61,6 +61,9 @@
     <Filter Include="Source Files\Collisions">
       <UniqueIdentifier>{fe4fce3d-046b-422f-ba8e-3f4bafffdac8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\ASSETS\AUDIO">
+      <UniqueIdentifier>{e768a5af-8b60-4e22-8c14-4889b437db43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -179,5 +182,10 @@
     <Font Include="Assets\Fonts\BBrick.ttf">
       <Filter>Assets\Fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="ASSETS\AUDIO\thunder.wav">
+      <Filter>Resource Files\ASSETS\AUDIO</Filter>
+    </Media>
   </ItemGroup>
 </Project>
