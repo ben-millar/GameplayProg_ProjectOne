@@ -235,6 +235,12 @@ try
 		m_thunderAmbientMusic.setLoop(true);
 		m_thunderAmbientMusic.play();
 	}
+
+	if (!m_lightningBuffer.loadFromFile("ASSETS\\AUDIO\\lightning.wav"))
+	{
+		std::string msg{ "Error loading lightning sound buffer" };
+		throw std::exception(msg.c_str());
+	}
 }
 catch (const std::exception& e)
 {
@@ -286,11 +292,21 @@ void Game::processEvents()
 
 		if (sf::Event::MouseButtonPressed == event.type)
 		{
+			// Draw our lightning on-screen
 			m_lightning.strike({ event.mouseButton.x, event.mouseButton.y });
 
+			// Add to our screenshake variable
 			(m_screenShake < 0.25f) ? m_screenShake += 0.5f : m_screenShake = 0.75f;
 
+			// See if we've hit any cubes
 			checkCollisions(event.mouseButton.x, event.mouseButton.y);
+
+			// Play SFX
+			sf::Sound* sfx = new sf::Sound(m_lightningBuffer);
+			sfx->setPosition(event.mouseButton.x, event.mouseButton.y, 0.0f); // set relative to mouseclick pos
+			sfx->setPitch(1.0f + ((rand() % 21) / 10.0f)); // rand between 1.0 and 1.2
+			sfx->play();
+			m_lightningSoundQueue.push(sfx); // add to our queue
 
 			m_drawFlash = true;
 		}
@@ -347,6 +363,21 @@ void Game::update(sf::Time t_deltaTime)
 			// Do you expect me to talk?
 			// No, Mr Cube. I expect you to die.
 			m_objectPool.kill(*cube);
+		}
+	}
+
+	// If we have active SFX in our queue
+	if (!m_lightningSoundQueue.empty())
+	{
+		// While there's a sound at the front which has finished playing
+		while (m_lightningSoundQueue.front()->getPlayingOffset() > sf::seconds(5.0f))
+		{
+			// Delete it, pop it off, and check the next one
+			delete m_lightningSoundQueue.front();
+			m_lightningSoundQueue.pop();
+
+			// If it's now empty, break out of the loop
+			if (m_lightningSoundQueue.empty()) break;
 		}
 	}
 

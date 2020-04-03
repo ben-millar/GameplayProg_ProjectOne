@@ -36,16 +36,16 @@ void Lightning::strike(sf::Vector2i t_target)
 		// Random x offset +/- 30px, y-value is our break point percentage along the total length
 		sf::Vector2f end = { (start.x + rand() % 60) - 30, t_target.y * breakPoint.at(i)};
 
-		bolt.segments.append(sf::Vertex(start, sf::Color::Yellow));
-		bolt.segments.append(sf::Vertex(end, sf::Color::Yellow));
+		bolt.segments.append(sf::Vertex(start, sf::Color(255, 255, 192, 255)));
+		bolt.segments.append(sf::Vertex(end, sf::Color(255, 255, 64, 255)));
 
 		start = end;
 	}
 
 
 	// Connect the end of the bolt to the strike target
-	bolt.segments.append(sf::Vertex(start, sf::Color::Yellow));
-	bolt.segments.append(sf::Vertex(static_cast<sf::Vector2f>(t_target), sf::Color::Yellow));
+	bolt.segments.append(sf::Vertex(start, sf::Color(255, 255, 64, 255)));
+	bolt.segments.append(sf::Vertex(static_cast<sf::Vector2f>(t_target), sf::Color(255, 255, 192, 255)));
 
 	// Restart clock
 	bolt.timeAlive.restart();

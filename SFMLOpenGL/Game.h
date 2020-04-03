@@ -11,6 +11,7 @@
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include <sstream>
+#include <queue>
 
 #include "GLOBALS.h"
 
@@ -99,6 +100,10 @@ private:
 	sf::Sprite m_backgroundSprite;
 
 	sf::Music m_thunderAmbientMusic;
+	sf::SoundBuffer m_lightningBuffer;
+
+	// We dynamically add and remove sfx from this as they happen
+	std::queue<sf::Sound*> m_lightningSoundQueue;
 
 	sf::RectangleShape m_lightningFlash;
 	int m_frameCount{ 0 };
@@ -139,7 +144,7 @@ private:
 
 
 	//Please see .//Assets//Textures// for more textures
-	const std::string filename = ".//ASSETS//TEXTURES//grass.png";
+	const std::string filename = ".//ASSETS//TEXTURES//box.png";
 
 	int width;						// Width of texture
 	int height;						// Height of texture

@@ -187,5 +187,8 @@
     <Media Include="ASSETS\AUDIO\thunder.wav">
       <Filter>Resource Files\ASSETS\AUDIO</Filter>
     </Media>
+    <Media Include="ASSETS\AUDIO\lightning.wav">
+      <Filter>Resource Files\ASSETS\AUDIO</Filter>
+    </Media>
   </ItemGroup>
 </Project>
